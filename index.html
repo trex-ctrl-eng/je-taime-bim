@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Je t’aime, Bim 💙❤️</title>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3a8a, #dc2626);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      background: #f8fafc;
+      border: 5px solid #2563eb;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(220,38,38,0.6);
+    }
+
+    .msg {
+      position: absolute;
+      text-align: center;
+      font-size: 40px;
+      color: #ffffff;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 2s ease;
+    }
+
+    .msg span {
+      font-size: 22px;
+      margin-top: 10px;
+      color: #fee2e2;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="game" width="400" height="400"></canvas>
+
+<div class="msg" id="finalMsg">
+  💙❤️ JE T’AIME, BIM ❤️💙
+  <span>
+    Você é meu mundo inteiro 🦖🍄<br>
+    Com amor, só pra você 💕
+  </span>
+</div>
+
+<script>
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+
+  const dino = { x: 190, y: 190, size: 22 };
+  let mushrooms = [
+    { x: 60, y: 60 },
+    { x: 320, y: 70 },
+    { x: 80, y: 320 },
+    { x: 320, y: 300 }
+  ];
+
+  function drawDino() {
+    ctx.fillStyle = "#2563eb"; // azul
+    ctx.fillRect(dino.x, dino.y, dino.size, dino.size);
+
+    ctx.fillStyle = "#dc2626"; // coração
+    ctx.font = "14px Arial";
+    ctx.fillText("♥", dino.x + 4, dino.y + 16);
+  }
+
+  function drawMushrooms() {
+    ctx.fillStyle = "#dc2626"; // vermelho
+    mushrooms.forEach(m => {
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#2563eb";
+      ctx.beginPath();
+      ctx.arc(m.x, m.y - 6, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#dc2626";
+    });
+  }
+
+  function checkWin() {
+    mushrooms = mushrooms.filter(m => {
+      const dist = Math.hypot(dino.x - m.x, dino.y - m.y);
+      return dist > 22;
+    });
+
+    if (mushrooms.length === 0) {
+      canvas.style.display = "none";
+      document.getElementById("finalMsg").style.display = "flex";
+    }
+  }
+
+  function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawDino();
+    drawMushrooms();
+    checkWin();
+    requestAnimationFrame(gameLoop);
+  }
+
+  window.addEventListener("keydown", e => {
+    if (e.key === "ArrowUp") dino.y -= 10;
+    if (e.key === "ArrowDown") dino.y += 10;
+    if (e.key === "ArrowLeft") dino.x -= 10;
+    if (e.key === "ArrowRight") dino.x += 10;
+  });
+
+  gameLoop();
+</script>
+
+</body>
+</html>
